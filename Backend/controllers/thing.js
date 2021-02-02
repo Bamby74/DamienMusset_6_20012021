@@ -20,7 +20,7 @@ exports.createThing = (req,res,next) => {
     });
     thing.save()
         .then(() => res.status(201).json({ message: 'Sauce enregistrée !'}))
-        .catch(error => res.status(400).json({ error: error }))
+        .catch(error => res.status(400).json({ error }))
 };
 
 exports.getAllThing = (req, res, next) => {
@@ -30,7 +30,7 @@ exports.getAllThing = (req, res, next) => {
         }
     )
     .catch((error) => {
-            res.status(400).json({ error: error });s
+            res.status(400).json({ error });s
         }
     );
 }
@@ -38,7 +38,7 @@ exports.getAllThing = (req, res, next) => {
 exports.modifyThing = (req, res, next) => {
     Thing.updateOne({ _id: req.params.id}, { ...req.body, _id: req.params.id})
         .then(() => res.status(201).json({ message: 'Sauce mise à jour avec succès!' }))
-        .catch(error => res.status(400).json({ error: error }))
+        .catch(error => res.status(400).json({ error }))
 }
 
 exports.deleteThing = (req, res, next) => {
