@@ -37,7 +37,12 @@ exports.getAllSauces = (req, res, next) => {
 }
 
 exports.modifySauce = (req, res, next) => {
-    Sauces.updateOne({ _id: req.params.id}, { ...req.body, _id: req.params.id})
+    const sauceObject = req.file ?
+    {
+        ...JSON.parse(req.body.sauce),
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    } : { ...req.body };
+    Sauces.updateOne({ _id: req.params.id}, { ...sauceObject, _id: req.params.id})
         .then(() => res.status(201).json({ message: 'Sauce mise à jour avec succès!' }))
         .catch(error => res.status(400).json({ error }))
 }
@@ -48,5 +53,8 @@ exports.deleteSauce = (req, res, next) => {
     .catch(error => res.status(400).json({ error: error }));
 }
 
+exports.likeSauce = (req, res, next) => {
+
+}
 
 
