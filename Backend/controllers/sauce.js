@@ -62,7 +62,51 @@ exports.deleteSauce = (req, res, next) => {
 }
 
 exports.likeSauce = (req, res, next) => {
-
-}
+    switch (req.body.like) {
+        case 0:
+            Sauces.findOne({ _id: req.params.id })
+                .then(sauce => {
+                    if(sauce.usersLiked.find( user => user === req.body.userId )) {
+                        Sauces.updateOne({ _id: req.params.id},  {  
+                            $inc: { likes: -1 },
+                            $pull: { usersLiked: req.body.userId },
+                            _id: req.params.id,
+                        })
+                            .then(() => res.status(201).json({ message: "Tu as changé d'avis sur cette sauce !" }))
+                            .catch(error => res.status(400).json({ error }));
+                    } if(sauce.usersDisliked.find( user => user === req.body.userId )) {
+                        Sauces.updateOne({ _id: req.params.id }, {
+                            $inc: { dislikes: -1},
+                            $pull: { usersDisliked: req.body.userId },
+                            _id: req.params.id
+                        })
+                            .then(() => res.status(201).json({ message: "Tu as changé d'avis sur cette sauce !" }))
+                            .catch(error => res.status(400).json({ error }));
+                    }
+                })
+                .catch(error => res.status(400).json({ error }));
+            break;
+        case 1:
+            Sauces.updateOne({ _id: req.params.id }, {
+                $inc: { likes: 1 },
+                $push: { usersLiked: req.body.userId },
+                _id: req.params.id 
+            })
+                .then(() => res.status(200).json({ message: 'Vous aimé cette sauce !'}))
+                .catch(error => res.status(400).json({ error }));
+            break;
+        case -1:
+            Sauces.updateOne({ _id: req.params.id }, {
+                $inc: { dislikes: 1},
+                $push: { usersDisliked: req.body.userId },
+                _id: req.params.id,
+            })
+                .then(() => res.status(200).json({ message: "Vous n'aimez pas cette sauce !" }))
+                .catch(error => res.status(400).json({ error }));
+            break;
+            default:
+                console.log('Requête mal effectuée !')
+    }
+}    
 
 
