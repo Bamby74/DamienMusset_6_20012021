@@ -62,6 +62,7 @@ exports.deleteSauce = (req, res, next) => {
 }
 
 exports.likeSauce = (req, res, next) => {
+    console.log(req.body);
     switch (req.body.like) {
         case 0:
             Sauces.findOne({ _id: req.params.id })
@@ -105,7 +106,8 @@ exports.likeSauce = (req, res, next) => {
                 .catch(error => res.status(400).json({ error }));
             break;
             default:
-                console.log('Requête mal effectuée !')
+                console.log('Requête mal effectuée !',req.params)
+                res.status(400).json();
     }
 }    
 

@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
+const helmet = require('helmet');
 
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
@@ -21,6 +22,8 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+
+app.use(helmet());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
